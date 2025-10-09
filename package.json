@@ -1,0 +1,22 @@
+{
+  "name": "my-qr-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "qrcode": "^1.5.4",
+    "vue": "^3.5.22"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.14",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "daisyui": "^5.1.29",
+    "tailwindcss": "^4.1.14",
+    "vite": "^7.1.7"
+  }
+}
