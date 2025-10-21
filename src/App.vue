@@ -53,9 +53,11 @@ const downloadQR = () => {
   const day = String(now.getDate()).padStart(2, "0");
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
+  const seconds = String(now.getSeconds()).padStart(2, "0");
 
   // 3. ประกอบร่างชื่อไฟล์ตาม format ที่ต้องการ
-  const filename = `qrcode-${year}${month}${day}-${hours}${minutes}.png`;
+  // เพิ่มวินาทีในชื่อไฟล์เป็น qrcode-YYYYMMDD-HHMMSS.png
+  const filename = `qrcode-${year}${month}${day}-${hours}${minutes}${seconds}.png`;
 
   // 4. สร้าง Link สำหรับดาวน์โหลดโดยใช้ชื่อไฟล์ใหม่
   const link = document.createElement("a");
