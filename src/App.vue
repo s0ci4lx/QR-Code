@@ -57,7 +57,7 @@ const downloadQR = () => {
 
   // 3. ประกอบร่างชื่อไฟล์ตาม format ที่ต้องการ
   // เพิ่มวินาทีในชื่อไฟล์เป็น qrcode-YYYYMMDD-HHMMSS.png
-  const filename = `qrcode-${year}${month}${day}-${hours}${minutes}${seconds}.png`;
+  const filename = `tp-qr-${year}${month}${day}-${hours}${minutes}${seconds}.png`;
 
   // 4. สร้าง Link สำหรับดาวน์โหลดโดยใช้ชื่อไฟล์ใหม่
   const link = document.createElement("a");
