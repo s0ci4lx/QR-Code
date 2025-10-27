@@ -7,14 +7,44 @@ const text = ref("");
 const qrCodeDataUrl = ref("");
 const errorMessage = ref("");
 const isLoading = ref(false);
-const theme = ref("cupcake"); // State สำหรับสลับ Theme (ค่าเริ่มต้นคือ 'cupcake')
+const theme = ref("cupcake");
+
+// --- Language State & Translations ---
+const lang = ref("th"); // 'th' = ไทย, 'en' = อังกฤษ
+
+const translations = ref({
+  en: {
+    title: "QR Code Generator",
+    placeholder: "Enter text or URL...",
+    generateBtn: "Generate",
+    downloadBtn: "Download PNG",
+    newBtn: "Create New",
+    errorEmpty: "Please enter text or a URL.",
+    errorGenerate: "Could not generate QR code.",
+    altQR: "Generated QR Code",
+    heroText: "Enter text or a URL above to generate your QR code instantly.",
+    craftedBy: "Crafted by"
+  },
+  th: {
+    title: "เครื่องมือสร้าง QR Code",
+    placeholder: "ป้อนข้อความหรือ URL...",
+    generateBtn: "สร้าง",
+    downloadBtn: "ดาวน์โหลด PNG",
+    newBtn: "สร้างใหม่",
+    errorEmpty: "กรุณาป้อนข้อความหรือ URL",
+    errorGenerate: "ไม่สามารถสร้าง QR Code ได้",
+    altQR: "รูป QR Code ที่สร้างขึ้น",
+    heroText: "ป้อนข้อความหรือ URL ด้านบนเพื่อสร้าง QR Code ของคุณทันที",
+    craftedBy: "สร้างสรรค์โดย"
+  }
+});
 
 // --- Functions ---
 
 // Function to generate QR Code
 const generateQR = async () => {
   if (!text.value.trim()) {
-    errorMessage.value = "Please enter text or a URL.";
+    errorMessage.value = translations.value[lang.value].errorEmpty;
     qrCodeDataUrl.value = "";
     return;
   }
@@ -33,36 +63,30 @@ const generateQR = async () => {
     qrCodeDataUrl.value = await QRCode.toDataURL(text.value, options);
   } catch (err) {
     console.error(err);
-    errorMessage.value = "Could not generate QR code.";
+    errorMessage.value = translations.value[lang.value].errorGenerate;
     qrCodeDataUrl.value = "";
   } finally {
     isLoading.value = false;
   }
 };
 
-// Function to download the QR Code (ปรับปรุงให้มีวันที่และเวลา)
+// Function to download the QR Code
 const downloadQR = () => {
   if (!qrCodeDataUrl.value) return;
 
-  // 1. สร้าง object Date เพื่อดึงเวลาปัจจุบัน
   const now = new Date();
-
-  // 2. ดึงค่า ปี, เดือน, วัน, ชั่วโมง, นาที และทำให้เป็นเลข 2 หลักเสมอ (เช่น 09, 05)
   const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0"); // getMonth() เริ่มจาก 0 เลยต้อง +1
+  const month = String(now.getMonth() + 1).padStart(2, "0");
   const day = String(now.getDate()).padStart(2, "0");
   const hours = String(now.getHours()).padStart(2, "0");
   const minutes = String(now.getMinutes()).padStart(2, "0");
   const seconds = String(now.getSeconds()).padStart(2, "0");
-
-  // 3. ประกอบร่างชื่อไฟล์ตาม format ที่ต้องการ
-  // เพิ่มวินาทีในชื่อไฟล์เป็น qrcode-YYYYMMDD-HHMMSS.png
+  
   const filename = `tp-qr-${year}${month}${day}-${hours}${minutes}${seconds}.png`;
 
-  // 4. สร้าง Link สำหรับดาวน์โหลดโดยใช้ชื่อไฟล์ใหม่
   const link = document.createElement("a");
   link.href = qrCodeDataUrl.value;
-  link.download = filename; // <-- ใช้ชื่อไฟล์แบบไดนามิก
+  link.download = filename;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -83,6 +107,15 @@ const createNew = () => {
   >
     <div class="card w-full max-w-md bg-base-100 shadow-xl">
       <div class="card-body items-center text-center">
+        
+        <button 
+          @click="lang = lang === 'en' ? 'th' : 'en'" 
+          class="btn btn-ghost btn-sm absolute top-4 left-4 font-bold"
+        >
+          <span v-if="lang === 'en'">TH</span>
+          <span v-else>EN</span>
+        </button>
+
         <label class="swap swap-rotate absolute top-4 right-4">
           <input
             type="checkbox"
@@ -108,7 +141,7 @@ const createNew = () => {
           </svg>
         </label>
 
-        <h1 class="card-title text-3xl mb-4 mt-8">QR Code Generator</h1>
+        <h1 class="card-title text-3xl mb-4 mt-8">{{ translations[lang].title }}</h1>
 
         <form @submit.prevent="generateQR" class="w-full">
           <div class="form-control">
@@ -117,10 +150,9 @@ const createNew = () => {
                 <input
                   v-model="text"
                   type="text"
-                  placeholder="Enter text or URL..."
+                  :placeholder="translations[lang].placeholder"
                   class="input input-bordered w-full pr-10"
                 />
-
                 <button
                   v-if="text"
                   @click.prevent="text = ''"
@@ -150,7 +182,7 @@ const createNew = () => {
                 :disabled="isLoading"
               >
                 <span v-if="isLoading" class="loading loading-spinner"></span>
-                <span v-else>Generate</span>
+                <span v-else>{{ translations[lang].generateBtn }}</span>
               </button>
             </div>
           </div>
@@ -164,15 +196,15 @@ const createNew = () => {
         >
           <img
             :src="qrCodeDataUrl"
-            alt="Generated QR Code"
+            :alt="translations[lang].altQR"
             class="border-4 border-base-300 rounded-lg"
           />
           <div class="flex gap-2 w-full mt-2">
             <button @click="downloadQR" class="btn btn-success flex-1">
-              Download PNG
+              {{ translations[lang].downloadBtn }}
             </button>
             <button @click="createNew" class="btn btn-ghost flex-1">
-              Create New
+              {{ translations[lang].newBtn }}
             </button>
           </div>
         </div>
@@ -195,14 +227,14 @@ const createNew = () => {
                 />
               </svg>
               <p>
-                Enter text or a URL above to generate your QR code instantly.
+                {{ translations[lang].heroText }}
               </p>
             </div>
           </div>
         </div>
 
         <p class="mt-8 text-sm text-base-content/60">
-          Crafted by
+          {{ translations[lang].craftedBy }}
           <span class="font-bold text-base-content">Witchapol L.</span>
         </p>
       </div>
