@@ -2,3 +2,79 @@
 @plugin "daisyui" {
   themes: cupcake --default, forest --prefersdark, cupcake;
 }
+
+@layer base {
+  body {
+    @apply m-0 p-0 overflow-x-hidden;
+  }
+}
+
+@layer utilities {
+  .glass-card {
+    @apply backdrop-blur-md bg-white/60 border border-white/40 shadow-xl;
+  }
+  
+  [data-theme='forest'] .glass-card {
+    @apply bg-slate-900/40 border-white/10;
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+  
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .blob-1 { background-color: var(--blob-1); }
+  .blob-2 { background-color: var(--blob-2); }
+  .blob-3 { background-color: var(--blob-3); }
+}
+
+:root {
+  --mesh-bg: #fdf2f8;
+  --mesh-color-1: hsla(280, 80%, 95%, 1);
+  --mesh-color-2: hsla(240, 80%, 95%, 1);
+  --mesh-color-3: hsla(320, 80%, 95%, 1);
+  --blob-1: #e9d5ff; /* purple-200 */
+  --blob-2: #fef08a; /* yellow-200 */
+  --blob-3: #fbcfe8; /* pink-200 */
+}
+
+[data-theme='forest'] {
+  --mesh-bg: #020617;
+  --mesh-color-1: hsla(253, 30%, 8%, 1);
+  --mesh-color-2: hsla(225, 40%, 10%, 1);
+  --mesh-color-3: hsla(339, 40%, 10%, 1);
+  --blob-1: #4c1d95; /* purple-900 */
+  --blob-2: #713f12; /* yellow-900 */
+  --blob-3: #831843; /* pink-900 */
+}
+
+.bg-mesh {
+  background-color: var(--mesh-bg);
+  background-image: 
+    radial-gradient(at 0% 0%, var(--mesh-color-1) 0, transparent 50%), 
+    radial-gradient(at 50% 0%, var(--mesh-color-2) 0, transparent 50%), 
+    radial-gradient(at 100% 0%, var(--mesh-color-3) 0, transparent 50%);
+  transition: background-color 0.5s ease, background-image 0.5s ease;
+}

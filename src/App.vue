@@ -482,8 +482,13 @@ onMounted(() => {
 <template>
   <div
     :data-theme="theme"
-    class="min-h-screen bg-base-200 flex items-center justify-center p-4 relative"
+    class="min-h-screen bg-mesh overflow-hidden flex items-center justify-center p-4 relative"
   >
+    <!-- Animated Background Blobs -->
+    <div class="absolute top-0 -left-10 w-80 h-80 blob-1 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 dark:opacity-30 animate-blob"></div>
+    <div class="absolute top-0 -right-10 w-80 h-80 blob-2 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 dark:opacity-30 animate-blob animation-delay-2000"></div>
+    <div class="absolute -bottom-20 left-20 w-80 h-80 blob-3 rounded-full mix-blend-multiply dark:mix-blend-screen filter blur-3xl opacity-50 dark:opacity-30 animate-blob animation-delay-4000"></div>
+
     <!-- Toast Notification -->
     <div 
       v-if="toast.show"
@@ -501,8 +506,9 @@ onMounted(() => {
     </div>
 
     <!-- Main Card -->
-    <div class="card w-full max-w-md bg-base-100 shadow-xl transition-all duration-300">
-      <div class="card-body items-center text-center">
+    <div class="card w-full max-w-md glass-card shadow-2xl transition-all duration-500 hover:shadow-purple-500/20 z-10">
+      <div class="card-body items-center text-center p-6 space-y-4">
+
         
         <!-- Language Toggle -->
         <button 
@@ -539,7 +545,10 @@ onMounted(() => {
           </svg>
         </label>
 
-        <h1 class="card-title text-2xl sm:text-3xl mb-4 mt-8">{{ translations[lang].title }}</h1>
+        <h1 class="card-title text-3xl sm:text-4xl font-extrabold mb-2 mt-4 pb-2 pt-1 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-pink-600 dark:from-purple-400 dark:to-pink-400">
+          {{ translations[lang].title }}
+        </h1>
+
 
         <!-- Action Buttons -->
         <div class="flex gap-2 mb-4 flex-wrap justify-center">
@@ -596,8 +605,9 @@ onMounted(() => {
         <!-- Customization Panel -->
         <div 
           v-if="showCustomize"
-          class="w-full p-4 bg-base-200 rounded-lg mb-4 space-y-3 transition-all duration-300"
+          class="w-full p-4 bg-white/40 dark:bg-black/40 backdrop-blur-sm rounded-2xl mb-4 space-y-4 border border-white/30 transition-all duration-300"
         >
+
           <div class="flex justify-between items-center">
             <h3 class="font-bold text-lg">{{ translations[lang].customizeTitle }}</h3>
             <span 
@@ -684,8 +694,9 @@ onMounted(() => {
         <!-- History Panel -->
         <div 
           v-if="showHistory"
-          class="w-full p-4 bg-base-200 rounded-lg mb-4 max-h-96 overflow-y-auto transition-all duration-300"
+          class="w-full p-4 bg-white/40 dark:bg-black/40 backdrop-blur-sm rounded-2xl mb-4 max-h-96 overflow-y-auto border border-white/30 transition-all duration-300"
         >
+
           <div class="flex justify-between items-center mb-3">
             <h3 class="font-bold text-lg">{{ translations[lang].historyTitle }}</h3>
             <button 
@@ -725,8 +736,9 @@ onMounted(() => {
                   v-model="text"
                   type="text"
                   :placeholder="translations[lang].placeholder"
-                  class="input input-bordered w-full pr-10"
+                  class="input input-bordered w-full pr-12 bg-white/50 dark:bg-black/20 focus:bg-white dark:focus:bg-black transition-all duration-300 rounded-xl"
                 />
+
                 <button
                   v-if="text"
                   @click.prevent="text = ''"
@@ -753,12 +765,13 @@ onMounted(() => {
               <button
                 v-if="!autoGenerate"
                 type="submit"
-                class="btn btn-primary w-full sm:w-auto mt-2"
+                class="btn btn-primary w-full sm:w-auto mt-2 rounded-xl shadow-lg shadow-primary/30"
                 :disabled="isLoading"
               >
                 <span v-if="isLoading" class="loading loading-spinner"></span>
                 <span v-else>{{ translations[lang].generateBtn }}</span>
               </button>
+
             </div>
           </div>
         </form>
@@ -773,8 +786,9 @@ onMounted(() => {
           <img
             :src="qrCodeDataUrl"
             :alt="translations[lang].altQR"
-            class="border-4 border-base-300 rounded-lg shadow-lg transition-transform hover:scale-105"
+            class="p-2 bg-white rounded-2xl shadow-2xl transition-all duration-500 hover:scale-105 border border-white/40"
           />
+
           <div class="grid grid-cols-2 gap-2 w-full">
             <button @click="copyQR" class="btn btn-info btn-sm">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -797,12 +811,13 @@ onMounted(() => {
               {{ translations[lang].downloadBtn }}
             </button>
             
-            <button @click="createNew" class="btn btn-ghost btn-sm">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
+            <button @click="createNew" class="btn btn-ghost btn-sm bg-white/30 hover:bg-white/50 dark:bg-black/20 dark:hover:bg-black/40 rounded-xl">
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-purple-600 dark:text-purple-400">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
               {{ translations[lang].newBtn }}
             </button>
+
           </div>
         </div>
 
@@ -841,10 +856,11 @@ onMounted(() => {
     <!-- Scanner Modal -->
     <div 
       v-if="showScanner"
-      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4"
       @click.self="closeScanner"
     >
-      <div class="card w-full max-w-md bg-base-100 shadow-xl">
+      <div class="card w-full max-w-md glass-card shadow-2xl">
+
         <div class="card-body">
           <h2 class="card-title">{{ translations[lang].scanTitle }}</h2>
           
@@ -884,10 +900,11 @@ onMounted(() => {
           </div>
           
           <div class="card-actions justify-end mt-4">
-            <button @click="closeScanner" class="btn">
+            <button @click="closeScanner" class="btn btn-ghost bg-white/20 dark:bg-black/20 hover:bg-white/40 dark:hover:bg-black/40 rounded-xl">
               {{ translations[lang].scanClose }}
             </button>
           </div>
+
         </div>
       </div>
     </div>
